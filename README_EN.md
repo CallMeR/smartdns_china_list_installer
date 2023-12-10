@@ -66,7 +66,7 @@ By adding the -exclude-default-group parameter, only domain names specified in t
 
     ```bash
     ## Download the installation script
-    $ wget https://gitee.com/callmer/smartdns_china_list_installer/raw/main/smartdns_plugin.sh
+    $ wget https://raw.githubusercontent.com/CallMeR/smartdns_china_list_installer/main/smartdns_plugin.sh
 
     ## Set execution permissions for the script
     $ chmod +x smartdns_plugin.sh

@@ -66,7 +66,7 @@ server 114.114.115.115 -group accelerate -exclude-default-group
 
     ```bash
     ## 下载安装脚本
-    $ wget https://gitee.com/callmer/smartdns_china_list_installer/raw/main/smartdns_plugin.sh
+    $ wget https://raw.githubusercontent.com/CallMeR/smartdns_china_list_installer/main/smartdns_plugin.sh
 
     ## 设置安装脚本权限
     $ chmod +x smartdns_plugin.sh
