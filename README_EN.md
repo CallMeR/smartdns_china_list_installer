@@ -18,7 +18,19 @@ This project generates SmartDNS configuration files using a bash script and modi
 
 It no longer generates speed testing-related domain-rules configurations to avoid interfering with SmartDNS's existing speed testing mode.  
 
-It replaces a single upstream DNS server with a DNS server group called `accelerate` :  
+The DNS group configuration file is `dns-group.china.smartdns.conf` :  
+
+```conf
+## Modified DNS group rules
+
+server 223.5.5.5 -group flash -exclude-default-group
+server 119.29.29.29 -group flash -exclude-default-group
+server 114.114.114.114 -group flash -exclude-default-group
+```
+
+By adding the `-exclude-default-group` parameter, only domain names specified in the rules will use this DNS group.  
+
+Meanwhile, it replaces the single upstream DNS server with a DNS group named `flash` .  
 
 ```conf
 ## Original nameserver rules
@@ -28,37 +40,24 @@ nameserver /xyz.net/114.114.114.114
 
 ## Modified nameserver rules
 
-nameserver /abc.com/accelerate
-nameserver /xyz.net/accelerate
+nameserver /abc.com/flash
+nameserver /xyz.net/flash
 ```
 
-With this configuration, when SmartDNS requests domain names specified in the rules, it sends the requests to the designated upstream DNS server group.  
-
-The DNS server group configuration file is `server-group.china.accelerate.conf` :  
-
-```conf
-## Modified DNS server group rules
-
-server 223.5.5.5 -group accelerate -exclude-default-group
-server 119.29.29.29 -group accelerate -exclude-default-group
-server 114.114.114.114 -group accelerate -exclude-default-group
-server 114.114.115.115 -group accelerate -exclude-default-group
-```
-
-By adding the -exclude-default-group parameter, only domain names specified in the rules will use this DNS server group.  
+With this configuration, when SmartDNS requests domain names specified in the rules, it sends the requests to the designated upstream DNS group.  
 
 - Upstream DNS servers:
-  - `223.5.5.5 119.29.29.29 114.114.114.114 114.114.115.115`
+  - `223.5.5.5 119.29.29.29 114.114.114.114`
 
 - Configuration file path:
   - `/etc/smartdns.d`
 
 - Configuration file names:
-  - `server-group.china.accelerate.conf`
-  - `apple.china.accelerate.conf`
-  - `google.china.accelerate.conf`
-  - `accelerated-domains.china.accelerate.conf`
-  - `bogus-nxdomain.china.accelerate.conf`
+  - `dns-group.china.smartdns.conf`
+  - `apple.china.smartdns.conf`
+  - `google.china.smartdns.conf`
+  - `accelerated-domains.china.smartdns.conf`
+  - `bogus-nxdomain.china.smartdns.conf`
 
 ### Usage
 
@@ -66,7 +65,7 @@ By adding the -exclude-default-group parameter, only domain names specified in t
 
     ```bash
     ## Download the installation script
-    $ wget https://raw.githubusercontent.com/CallMeR/smartdns_china_list_installer/main/smartdns_plugin.sh
+    $ curl -LR -O https://raw.githubusercontent.com/CallMeR/smartdns_china_list_installer/main/smartdns_plugin.sh
 
     ## Set execution permissions for the script
     $ chmod +x smartdns_plugin.sh

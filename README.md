@@ -18,7 +18,19 @@
 
 不再生成测速相关的 `domain-rules` 配置，避免干扰 SmartDNS 现有测速模式。  
 
-使用 DNS 服务器组 `accelerate` 替换单个上游 DNS 服务器：  
+DNS 服务器组配置文件为 `dns-group.china.smartdns.conf` ：  
+
+```conf
+## 本项目 DNS 服务器组规则
+
+server 223.5.5.5 -group flash -exclude-default-group
+server 119.29.29.29 -group flash -exclude-default-group
+server 114.114.114.114 -group flash -exclude-default-group
+```
+
+由于添加了 `-exclude-default-group` 参数，只有规则内域名会使用该 DNS 服务器组。  
+
+同时，本项目使用 DNS 服务器组 `flash` 替换了单个上游 DNS 服务器：  
 
 ```conf
 ## 上游项目 nameserver 规则
@@ -28,37 +40,24 @@ nameserver /xyz.net/114.114.114.114
 
 ## 本项目 nameserver 规则
 
-nameserver /abc.com/accelerate
-nameserver /xyz.net/accelerate
+nameserver /abc.com/flash
+nameserver /xyz.net/flash
 ```
 
 此时，SmartDNS 在请求规则内域名时，将向指定的上游 DNS 服务器组发送请求。  
 
-DNS 服务器组配置文件为 `server-group.china.accelerate.conf` ：  
-
-```conf
-## 本项目 DNS 服务器组规则
-
-server 223.5.5.5 -group accelerate -exclude-default-group
-server 119.29.29.29 -group accelerate -exclude-default-group
-server 114.114.114.114 -group accelerate -exclude-default-group
-server 114.114.115.115 -group accelerate -exclude-default-group
-```
-
-由于添加了 `-exclude-default-group` 参数，只有规则内域名会使用该 DNS 服务器组。  
-
 - 上游 DNS 服务器：
-  - `223.5.5.5 119.29.29.29 114.114.114.114 114.114.115.115`
+  - `223.5.5.5 119.29.29.29 114.114.114.114`
 
 - 配置文件路径：
   - `/etc/smartdns.d`
 
 - 配置文件名：
-  - `server-group.china.accelerate.conf`
-  - `apple.china.accelerate.conf`
-  - `google.china.accelerate.conf`
-  - `accelerated-domains.china.accelerate.conf`
-  - `bogus-nxdomain.china.accelerate.conf`
+  - `dns-group.china.smartdns.conf`
+  - `apple.china.smartdns.conf`
+  - `google.china.smartdns.conf`
+  - `accelerated-domains.china.smartdns.conf`
+  - `bogus-nxdomain.china.smartdns.conf`
 
 ### 使用方法
 
@@ -66,7 +65,7 @@ server 114.114.115.115 -group accelerate -exclude-default-group
 
     ```bash
     ## 下载安装脚本
-    $ wget https://raw.githubusercontent.com/CallMeR/smartdns_china_list_installer/main/smartdns_plugin.sh
+    $ curl -LR -O https://raw.githubusercontent.com/CallMeR/smartdns_china_list_installer/main/smartdns_plugin.sh
 
     ## 设置安装脚本权限
     $ chmod +x smartdns_plugin.sh
