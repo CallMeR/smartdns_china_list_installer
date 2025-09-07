@@ -14,7 +14,7 @@
 
 ### 细节说明
 
-本项目仅使用 `bash` 脚本生成 SmartDNS 配置文件，并对部分配置文件逻辑进行了修改。  
+本项目仅使用 `sh` 脚本生成 SmartDNS 配置文件，并对部分配置文件逻辑进行了修改。  
 
 不再生成测速相关的 `domain-rules` 配置，避免干扰 SmartDNS 现有测速模式。  
 
@@ -23,14 +23,17 @@ DNS 服务器组配置文件为 `dns-group.china.smartdns.conf` ：
 ```conf
 ## 本项目 DNS 服务器组规则
 
-server 223.5.5.5 -group flash -exclude-default-group
-server 119.29.29.29 -group flash -exclude-default-group
+server 223.5.5.5       -group flash -exclude-default-group
+server 180.184.1.1     -group flash -exclude-default-group
+server 119.29.29.29    -group flash -exclude-default-group
 server 114.114.114.114 -group flash -exclude-default-group
+server 2402:4e00::     -group flash -exclude-default-group
+server 2400:3200::1    -group flash -exclude-default-group
 ```
 
 由于添加了 `-exclude-default-group` 参数，只有规则内域名会使用该 DNS 服务器组。  
 
-同时，本项目使用 DNS 服务器组 `flash` 替换了单个上游 DNS 服务器：  
+本项目使用 DNS 服务器组 `flash` 替换了单个上游 DNS 服务器：  
 
 ```conf
 ## 上游项目 nameserver 规则
@@ -47,7 +50,8 @@ nameserver /xyz.net/flash
 此时，SmartDNS 在请求规则内域名时，将向指定的上游 DNS 服务器组发送请求。  
 
 - 上游 DNS 服务器：
-  - `223.5.5.5 119.29.29.29 114.114.114.114`
+  - IPv4 DNS：`223.5.5.5 180.184.1.1 119.29.29.29 114.114.114.114`
+  - IPv6 DNS：`2402:4e00:: 2400:3200::1`
 
 - 配置文件路径：
   - `/etc/smartdns.d`
@@ -65,10 +69,10 @@ nameserver /xyz.net/flash
 
     ```bash
     ## 下载安装脚本
-    $ curl -LR -O https://raw.githubusercontent.com/CallMeR/smartdns_china_list_installer/main/smartdns_plugin.sh
+    $ sudo curl -LR -o /usr/local/bin/smartdns-plugin.sh https://raw.githubusercontent.com/CallMeR/smartdns_china_list_installer/main/smartdns_plugin.sh
 
     ## 设置安装脚本权限
-    $ chmod +x smartdns_plugin.sh
+    $ sudo chmod +x /usr/local/bin/smartdns-plugin.sh
     ```
 
 2. 编辑所需的上游 DNS 服务器列表（可选）
@@ -77,7 +81,7 @@ nameserver /xyz.net/flash
 
     ```bash
     ## 执行安装脚本
-    $ sudo ./smartdns_plugin.sh
+    $ sudo /usr/local/bin/smartdns-plugin.sh
     ```
 
 4. 定期执行脚本（可选）
@@ -88,7 +92,7 @@ nameserver /xyz.net/flash
 
     ## 定时任务配置项
     
-    20 5 * * * /usr/bin/bash /path/to/smartdns_plugin.sh
+    20 5 * * * /usr/local/bin/smartdns-plugin.sh
     ```
 
 ### 特别鸣谢
